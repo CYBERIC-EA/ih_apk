@@ -1,19 +1,19 @@
 [app]
 
 # (str) Title of your application
-title = IHD Prediction
+title = My Application
 
 # (str) Package name
-package.name = IHD Prediction
+package.name = myapp
 
 # (str) Package domain (needed for android/ios packaging)
-package.domain = org.NNena
+package.domain = org.test
 
 # (str) Source code where the main.py live
 source.dir = .
 
 # (list) Source files to include (let empty to include all the files)
-source.include_exts = py,png,jpg,kv,atlas,ttf,wav,mp3
+source.include_exts = py,png,jpg,kv,atlas
 
 # (list) List of inclusions using pattern matching
 #source.include_patterns = assets/*,images/*.png
@@ -136,7 +136,7 @@ fullscreen = 0
 # agreements. This is intended for automation only. If set to False,
 # the default, you will be shown the license when first running
 # buildozer.
-android.accept_sdk_license = True
+# android.accept_sdk_license = False
 
 # (str) Android entry point, default is ok for Kivy-based app
 #android.entrypoint = org.kivy.android.PythonActivity
