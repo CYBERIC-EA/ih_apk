@@ -93,9 +93,7 @@ runs:
         tar -xzf ant.tar.gz -C .buildozer/android/platform/apache-ant --strip-components=1
       shell: bash
     
-    name: Build with Buildozer
-        uses: android-actions/setup-android@v2
-        id: buildozer
-        with:
-          command: echo y | buildozer -v android debug
-          buildozer_version: master
+    - name: Build with Buildozer
+      run: |
+        echo y | buildozer -v android debug
+      shell: bash
