@@ -10,12 +10,9 @@ inputs:
   buildozer-cmd:
     default: 'echo y | buildozer -v android debug'
     description: 'Buildozer command to use'
-
-# Add the branding section
 branding:
   color: 'green'
   icon: 'play'
-
 runs:
   using: "composite"
   steps:
@@ -24,26 +21,29 @@ runs:
       with:
         architecture: x64
         python-version: ${{ inputs.python-version }}
-
+    
     - name: Setup Java 17 required by Gradle
       uses: actions/setup-java@v4
       with:
-        distribution: 'temurin'  # or 'zulu','liberica', etc.
+        distribution: 'temurin'
         java-version: '17'
-
+    
     - name: Set JAVA_HOME
       run: |
         echo "JAVA_HOME=$JAVA_HOME" >> $GITHUB_ENV
       shell: bash
-
+    
+    - name: Install Android SDK
+      uses: android-actions/setup-android@v2
+    
     - name: Prepare virtual environment
       run: |
         python3 -m venv venv
         source venv/bin/activate
         echo "Using Python==$(python --version)"
       shell: bash
-      
-    - name: Install and upgrade dependencies
+    
+    - name: Install system dependencies
       run: |
         sudo apt update
         sudo apt install -y git \
@@ -61,31 +61,39 @@ runs:
           libtinfo5 \
           cmake \
           libffi-dev \
-          libssl-dev
+          libssl-dev \
+          wget
         export PATH=$PATH:~/.local/bin/
+      shell: bash
+    
+    - name: Install Python dependencies
+      run: |
+        python3 -m pip install --upgrade pip
         python3 -m pip install --upgrade \
           Cython==0.29.33 \
           buildozer
-      shell: bash
-
-    - name: Install requirements in requirements.txt if it exists
-      run: |
         if [ -f requirements.txt ]; then
           python3 -m pip install -r requirements.txt
         fi
       shell: bash
-
-      - name: Install build tools
+    
+    - name: Install Android SDK components
       run: |
         yes | sdkmanager --licenses
         sdkmanager "build-tools;36.0.0"
         sdkmanager "platform-tools"
         sdkmanager "platforms;android-30"
-
+        sdkmanager "ndk;25.1.8937393"
+      shell: bash
+    
+    - name: Download Apache Ant
+      run: |
+        mkdir -p .buildozer/android/platform/apache-ant
+        wget https://archive.apache.org/dist/ant/binaries/apache-ant-1.10.12-bin.tar.gz -O ant.tar.gz
+        tar -xzf ant.tar.gz -C .buildozer/android/platform/apache-ant --strip-components=1
+      shell: bash
+    
     - name: Build with Buildozer
-        uses: android-actions/setup-android@v2
-        id: buildozer
-        with:
-          command: echo y | buildozer -v android debug
-          buildozer_version: master
-        shell: bash
+      run: |
+        echo y | buildozer -v android debug
+      shell: bash
