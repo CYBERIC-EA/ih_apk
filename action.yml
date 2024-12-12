@@ -78,13 +78,15 @@ runs:
       shell: bash
     
     - name: Install Android SDK components
-      run: |
-        yes | sdkmanager --licenses
-        sdkmanager "build-tools;36.0.0"
-        sdkmanager "platform-tools"
-        sdkmanager "platforms;android-30"
-        sdkmanager "ndk;25.1.8937393"
-      shell: bash
+  run: |
+    yes | sdkmanager --licenses
+    yes | sdkmanager "build-tools;33.0.2"
+    yes | sdkmanager "platform-tools"
+    yes | sdkmanager "platforms;android-33"
+    yes | sdkmanager "cmdline-tools;latest"
+    mkdir -p ~/.android
+    touch ~/.android/repositories.cfg
+  shell: bash
     
     - name: Download Apache Ant
       run: |
