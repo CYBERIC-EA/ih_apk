@@ -8,7 +8,7 @@ inputs:
     default: '.'
     description: 'Working directory'
   buildozer-cmd:
-    default: 'buildozer android debug'
+    default: 'echo y | buildozer -v android debug'
     description: 'Buildozer command to use'
 
 # Add the branding section
