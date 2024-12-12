@@ -75,7 +75,17 @@ runs:
         fi
       shell: bash
 
-    - name: Build with Buildozer
+      - name: Install build tools
       run: |
-        ${{ inputs.buildozer-cmd }}
-      shell: bash
+        yes | sdkmanager --licenses
+        sdkmanager "build-tools;36.0.0"
+        sdkmanager "platform-tools"
+        sdkmanager "platforms;android-30"
+
+    - name: Build with Buildozer
+        uses: android-actions/setup-android@v2
+        id: buildozer
+        with:
+          command: echo y | buildozer -v android debug
+          buildozer_version: master
+        shell: bash
